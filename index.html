@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Background Animation</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative; /* Ensure relative positioning for absolute elements */
+    font-family: 'Roboto', sans-serif; /* Use Roboto as the primary font */
+  }
+  
+  /* Animation for shapes */
+  @keyframes bounce {
+    0% {
+      transform: translateY(-50px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(50px) rotate(180deg);
+    }
+    100% {
+      transform: translateY(-50px) rotate(360deg);
+    }
+  }
+  
+  /* Circle styles */
+  .circle {
+    position: absolute;
+    background-color: #3498db;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    animation: bounce 5s infinite alternate;
+  }
+  .circle:nth-child(2) {
+    background-color: #2ecc71;
+    width: 80px;
+    height: 80px;
+    animation-duration: 4s;
+  }
+  .circle:nth-child(3) {
+    background-color: #e74c3c;
+    width: 120px;
+    height: 120px;
+    animation-duration: 6s;
+  }
+  
+  /* Triangle styles */
+  .triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 86.6px solid #f39c12;
+    animation: bounce 4s infinite alternate;
+  }
+  .triangle:nth-child(2) {
+    border-bottom-color: #9b59b6;
+    animation-duration: 3s;
+  }
+  .triangle:nth-child(3) {
+    border-bottom-color: #e67e22;
+    animation-duration: 5s;
+  }
+  
+  /* School styles */
+  .school {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 100px solid #34495e;
+    transform: rotate(180deg);
+    animation: bounce 6s infinite alternate;
+  }
+
+  /* GUI styles */
+  #container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 999; /* Ensure GUI elements are above the background animation */
+    font-family: 'Roboto', sans-serif; /* Use Roboto as the primary font */
+  }
+  input[type="text"] {
+    padding: 8px;
+    margin-right: 10px;
+  }
+  button {
+    padding: 8px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  .offline-message {
+    display: none;
+    background-color: #f44336;
+    color: white;
+    padding: 10px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div id="container">
+  <h2>Enter Your Name</h2>
+  <form id="nameForm">
+    <input type="text" id="name" name="name" placeholder="Your Name">
+    <button type="submit">Enter</button>
+    <div class="offline-message" id="offlineMessage">The server is offline. Please try again later.</div>
+  </form>
+</div>
+
+<!-- Circles -->
+<div class="circle"></div>
+<div class="circle" style="top: 150px; left: 50%;"></div>
+<div class="circle" style="top: 300px; left: 80%;"></div>
+<div class="circle" style="top: 450px; left: 30%;"></div>
+
+<!-- Triangles -->
+<div class="triangle" style="top: 100px; left: 20%;"></div>
+<div class="triangle" style="top: 250px; left: 70%;"></div>
+<div class="triangle" style="top: 400px; left: 40%;"></div>
+<div class="triangle" style="top: 550px; left: 80%;"></div>
+
+<!-- School -->
+<div class="school" style="bottom: 0; left: 50%;"></div>
+
+<script>
+document.getElementById("nameForm").addEventListener("submit", function(event) {
+  event.preventDefault(); // prevent form submission
+  
+  var name = document.getElementById("name").value;
+  
+  // Check if the server is online (for demonstration purpose, assume it's always offline)
+  var serverOnline = false;
+  
+  if (serverOnline) {
+    // Save the name to localStorage
+    localStorage.setItem("savedName", name);
+    // Redirect to another website
+    window.location.href = "https://example.com";
+  } else {
+    // Show offline message
+    document.getElementById("offlineMessage").style.display = "block";
+  }
+});
+
+// On page load, check if there's a saved name
+window.onload = function() {
+  var savedName = localStorage.getItem("savedName");
+  if (savedName) {
+    document.getElementById("name").value = savedName;
+  }
+};
+</script>
+
+</body>
+</html>
