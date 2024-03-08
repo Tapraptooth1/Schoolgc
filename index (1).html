@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat System</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+
+    #container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    #chat-messages {
+        min-height: 200px;
+        max-height: 400px;
+        overflow-y: scroll;
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    input[type="text"], button {
+        padding: 10px;
+        margin-right: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    button {
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        border: none;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #name-input {
+        margin-bottom: 10px;
+    }
+
+    #video-call {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    #video-call button {
+        background-color: #dc3545;
+    }
+
+    #video-call button:hover {
+        background-color: #c82333;
+    }
+    
+    #chat-messages img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+<div id="container">
+    <div id="title">welcome to Mfwi</div>
+    <input type="text" id="name-input" placeholder="Enter your name">
+    <button onclick="changeName()">Enter</button>
+    <div id="chat-messages"></div>
+    <input type="text" id="message-input" placeholder="Enter your message" style="display: none;">
+    <button id="send-button" onclick="sendMessage()" style="display: none;">Send</button>
+    <input type="file" id="file-input" style="display: none;">
+    <button id="picture-button" onclick="document.getElementById('file-input').click();" style="display: none;">Send Picture</button>
+    <div id="video-call">
+        <button id="video-call-button" onclick="startVideoCall()">Start Video Call</button>
+    </div>
+</div>
+
+<script>
+    let name = '';
+    let videoCallClicked = false;
+    let welcomeMessageTimeout;
+
+    function changeName() {
+        const newName = document.getElementById('name-input').value.trim();
+        if (newName !== '') {
+            name = newName;
+            document.getElementById('name-input').value = '';
+            document.getElementById('name-input').style.display = 'none';
+            document.getElementById('send-button').style.display = 'inline-block';
+            document.getElementById('message-input').style.display = 'inline-block';
+            document.getElementById('picture-button').style.display = 'inline-block';
+            document.getElementById('video-call-button').style.display = 'none';
+            document.getElementById('chat-messages').style.minHeight = '300px';
+            document.getElementById('chat-messages').style.maxHeight = '500px';
+            showMessage(`Welcome, <span style="color: green">${name}</span>!`);
+            welcomeMessageTimeout = setTimeout(removeWelcomeMessage, 780000); // Remove message after 13 minutes
+        } else {
+            alert('Please enter your name.');
+        }
+    }
+
+    function sendMessage() {
+        const message = document.getElementById('message-input').value.trim();
+        if (message !== '') {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageElement = document.createElement('div');
+            messageElement.innerHTML = `${name ? `<span style="color: green">${name}</span>` : 'Anonymous'}: ${message}`;
+            chatMessages.appendChild(messageElement);
+            document.getElementById('message-input').value = '';
+        }
+    }
+
+    function sendPicture() {
+        document.getElementById('file-input').click();
+    }
+
+    function startVideoCall() {
+        if (!videoCallClicked) {
+            videoCallClicked = true;
+            const chatMessages = document.getElementById('chat-messages');
+            const callMessage = document.createElement('div');
+            callMessage.textContent = 'Sorry, the video call is unavailable due to the laziness of the developer.';
+            chatMessages.appendChild(callMessage);
+        }
+    }
+
+    function showMessage(message) {
+        const chatMessages = document.getElementById('chat-messages');
+        const messageElement = document.createElement('div');
+        messageElement.innerHTML = message;
+        chatMessages.appendChild(messageElement);
+    }
+
+    function removeWelcomeMessage() {
+        const chatMessages = document.getElementById('chat-messages');
+        chatMessages.removeChild(chatMessages.lastChild);
+        clearTimeout(welcomeMessageTimeout);
+    }
+    
+    document.getElementById('file-input').addEventListener('change', function() {
+        const fileInput = document.getElementById('file-input');
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imageUrl = event.target.result;
+                const chatMessages = document.getElementById('chat-messages');
+                const imageElement = document.createElement('img');
+                imageElement.src = imageUrl;
+                chatMessages.appendChild(imageElement);
+            };
+            reader.readAsDataURL(file);
+            fileInput.value = '';
+        }
+    });
+</script>
+</body>
+</html>
